@@ -1,14 +1,14 @@
 {
-  "name": "chatgpt-vscode-plugin",
+  "name": "chatgpt-sql-vscode-plugin",
   "icon": "images/icon.png",
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/barnesoir/chatgpt-vscode-plugin"
+    "url": "https://github.com/barnesoir/chatgpt-sql-vscode-plugin"
   },
-  "publisher": "JayBarnes",
-  "displayName": "ChatGPT VSCode Plugin",
-  "description": "A ChatGPT integration build using ChatGPT & 9 beers",
-  "version": "2.0.0",
+  "publisher": "gaojian80422",
+  "displayName": "ChatGPT With MySQL Cache",
+  "description": "A ChatGPT with MySQL cache integration build using ChatGPT",
+  "version": "3.0.0",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -16,86 +16,259 @@
     "Other"
   ],
   "activationEvents": [
-    "onView:chatgpt-vscode-plugin.view",
-    "onCommand:chatgpt-vscode-plugin.askGPT",
-    "onCommand:chatgpt-vscode-plugin.whyBroken",
-    "onCommand:chatgpt-vscode-plugin.explainPls",
-    "onCommand:chatgpt-vscode-plugin.refactor",
-    "onCommand:chatgpt-vscode-plugin.addTests",
-    "onCommand:chatgpt-vscode-plugin.resetToken"
+    "onView:chatgpt-sql-vscode-plugin.view",
+    "onCommand:chatgpt-sql-vscode-plugin.askGPT",
+    "onCommand:chatgpt-sql-vscode-plugin.summarize",
+    "onCommand:chatgpt-sql-vscode-plugin.explainPls",
+    "onCommand:chatgpt-sql-vscode-plugin.optimize",
+    "onCommand:chatgpt-sql-vscode-plugin.findProblems",
+    "onCommand:chatgpt-sql-vscode-plugin.whyBroken",
+    "onCommand:chatgpt-sql-vscode-plugin.refactor",
+    "onCommand:chatgpt-sql-vscode-plugin.addTests",
+    "onCommand:chatgpt-sql-vscode-plugin.addComments",
+    "onCommand:chatgpt-sql-vscode-plugin.completeCods",
+    "onCommand:chatgpt-sql-vscode-plugin.adhocPrompt"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "menus": {
       "editor/context": [
         {
-          "command": "chatgpt-vscode-plugin.whyBroken",
-          "group": "chat-gpt-menu-group@1"
+          "when": "editorTextFocus",
+          "submenu": "ChatGPTSQL",
+          "group": "chat-gpt-menu-group",
+          "title": "ChatGPT"
+        }
+      ],
+      "ChatGPTSQL": [
+        {
+          "command": "chatgpt-sql-vscode-plugin.summarize",
+          "group": "chat-gpt-menu-group"
         },
         {
-          "command": "chatgpt-vscode-plugin.explainPls",
-          "group": "chat-gpt-menu-group@2"
+          "command": "chatgpt-sql-vscode-plugin.explainPls",
+          "group": "chat-gpt-menu-group"
         },
         {
-          "command": "chatgpt-vscode-plugin.refactor",
-          "group": "chat-gpt-menu-group@3"
+          "command": "chatgpt-sql-vscode-plugin.optimize",
+          "group": "chat-gpt-menu-group"
         },
         {
-          "command": "chatgpt-vscode-plugin.addTests",
-          "group": "chat-gpt-menu-group@4"
+          "command": "chatgpt-sql-vscode-plugin.findProblems",
+          "group": "chat-gpt-menu-group"
+        },
+        {
+          "command": "chatgpt-sql-vscode-plugin.whyBroken",
+          "group": "chat-gpt-menu-group"
+        },
+        {
+          "command": "chatgpt-sql-vscode-plugin.refactor",
+          "group": "chat-gpt-menu-group"
+        },
+        {
+          "command": "chatgpt-sql-vscode-plugin.addTests",
+          "group": "chat-gpt-menu-group"
+        },
+        {
+          "command": "chatgpt-sql-vscode-plugin.addComments",
+          "group": "chat-gpt-menu-group"
+        },
+        {
+          "command": "chatgpt-sql-vscode-plugin.completeCods",
+          "group": "chat-gpt-menu-group"
+        },
+        {
+          "command": "chatgpt-sql-vscode-plugin.adhocPrompt",
+          "group": "chat-gpt-menu-group"
         }
       ]
     },
+    "submenus": [
+      {
+        "id": "ChatGPTSQL",
+        "label": "ChatGPTMySQL"
+      }
+    ],
     "commands": [
       {
-        "command": "chatgpt-vscode-plugin.askGPT",
-        "title": "ChatGPT: Query"
+        "command": "chatgpt-sql-vscode-plugin.askGPT",
+        "title": "Query"
       },
       {
-        "command": "chatgpt-vscode-plugin.addTests",
-        "title": "ChatGPT: Add tests"
+        "command": "chatgpt-sql-vscode-plugin.summarize",
+        "title": "Summarize"
       },
       {
-        "command": "chatgpt-vscode-plugin.whyBroken",
-        "title": "ChatGPT: Why is it broken?"
+        "command": "chatgpt-sql-vscode-plugin.explainPls",
+        "title": "Explain"
       },
       {
-        "command": "chatgpt-vscode-plugin.explainPls",
-        "title": "ChatGPT: Explain code"
+        "command": "chatgpt-sql-vscode-plugin.optimize",
+        "title": "Optimize"
       },
       {
-        "command": "chatgpt-vscode-plugin.refactor",
-        "title": "ChatGPT: Refactor"
+        "command": "chatgpt-sql-vscode-plugin.findProblems",
+        "title": "Find problems"
       },
       {
-        "command": "chatgpt-vscode-plugin.resetToken",
-        "title": "ChatGPT: Set API Key"
+        "command": "chatgpt-sql-vscode-plugin.whyBroken",
+        "title": "Why is it broken?"
+      },
+      {
+        "command": "chatgpt-sql-vscode-plugin.refactor",
+        "title": "Refactor"
+      },
+      {
+        "command": "chatgpt-sql-vscode-plugin.addTests",
+        "title": "Add tests"
+      },
+      {
+        "command": "chatgpt-sql-vscode-plugin.addComments",
+        "title": "Add comments"
+      },
+      {
+        "command": "chatgpt-sql-vscode-plugin.completeCods",
+        "title": "Complete codes"
+      },
+      {
+        "command": "chatgpt-sql-vscode-plugin.adhocPrompt",
+        "title": "Ad-hoc prompt"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "chatgpt-vscode-plugin",
-          "title": "ChatGPT",
+          "id": "chatgpt-sql-vscode-plugin",
+          "title": "ChatGPT MySQL",
           "icon": "images/icon.png"
         }
       ]
     },
     "views": {
-      "chatgpt-vscode-plugin": [
+      "chatgpt-sql-vscode-plugin": [
         {
           "type": "webview",
-          "id": "chatgpt-vscode-plugin.view",
+          "id": "chatgpt-sql-vscode-plugin.view",
           "name": "ChatGPT"
         }
       ]
+    },
+    "configuration": {
+      "title": "ChatGPTSql",
+      "properties": {
+        "chatgpt-sql.mysql.readEnable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mysql database read enable, return result if hit in database"
+        },
+        "chatgpt-sql.mysql.writeEnable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mysql database write enable, write result into database"
+        },
+        "chatgpt-sql.mysql.host": {
+          "type": "string",
+          "default": "localhost",
+          "description": "Mysql database host, reaload window if change this"
+        },
+        "chatgpt-sql.mysql.port": {
+          "type": "number",
+          "default": 3306,
+          "description": "Mysql database port, reaload window if change this"
+        },
+        "chatgpt-sql.mysql.user": {
+          "type": "string",
+          "default": "",
+          "description": "Mysql database user name, reaload window if change this"
+        },
+        "chatgpt-sql.mysql.password": {
+          "type": "string",
+          "default": "",
+          "description": "Mysql database user password, reaload window if change this"
+        },
+        "chatgpt-sql.mysql.database": {
+          "type": "string",
+          "default": "chatgpt_sql_vscode_plugin_database",
+          "description": "Mysql database name, no need to change if not sure, reaload window if change this"
+        },
+        "chatgpt-sql.gpt3.apikey": {
+          "type": "string",
+          "default": "",
+          "description": "ChatGPT apikey get from OpenAI"
+        },
+        "chatgpt-sql.gpt3.model": {
+          "type": "string",
+          "default": "gpt-3.5-turbo",
+          "description": "gpt-3.5-turbo"
+        },
+        "chatgpt-sql.gpt3.maxtokens": {
+          "type": "number",
+          "default": 1024,
+          "description": "The maximum number of tokens to generate in the completion."
+        },
+        "chatgpt-sql.gpt3.temperature": {
+          "type": "number",
+          "default": 1,
+          "description": "What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. We generally recommend altering this or top_p but not both."
+        },
+        "chatgpt-sql.gpt3.top_p": {
+          "type": "number",
+          "default": 1,
+          "description": "An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered. We generally recommend altering this or temperature but not both."
+        },
+        "chatgpt-sql.promptPrefix.summarize": {
+          "type": "string",
+          "default": "Summarize the following code",
+          "description": "The prompt prefix used for summarizing the selected code"
+        },
+        "chatgpt-sql.promptPrefix.explain": {
+          "type": "string",
+          "default": "Explain the following code",
+          "description": "The prompt prefix used for explaining the selected code"
+        },
+        "chatgpt-sql.promptPrefix.optimize": {
+          "type": "string",
+          "default": "Optimize the following code",
+          "description": "The prompt prefix used for optimizing the selected code"
+        },
+        "chatgpt-sql.promptPrefix.findProblems": {
+          "type": "string",
+          "default": "Find problems with the following code",
+          "description": "The prompt prefix used for finding problems for the selected code"
+        },
+        "chatgpt-sql.promptPrefix.whyBroken": {
+          "type": "string",
+          "default": "Why is this code broken?",
+          "description": "The prompt prefix used for finding why broken for the selected code"
+        },
+        "chatgpt-sql.promptPrefix.refactor": {
+          "type": "string",
+          "default": "Can you refactor this code and explain what's changed?",
+          "description": "The prompt prefix used for refactor for the selected code"
+        },
+        "chatgpt-sql.promptPrefix.addTests": {
+          "type": "string",
+          "default": "Implement tests for the following code",
+          "description": "The prompt prefix used for adding tests for the selected code"
+        },
+        "chatgpt-sql.promptPrefix.addComments": {
+          "type": "string",
+          "default": "Add comments for the following code",
+          "description": "The prompt prefix used for adding comments for the selected code"
+        },
+        "chatgpt-sql.promptPrefix.completeCods": {
+          "type": "string",
+          "default": "Complete the following code",
+          "description": "The prompt prefix used for completing for the selected code"
+        }
+      }
     }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
     "vscode:package": "vsce package",
-    "vscode:install": "code --install-extension chatgpt-vscode-plugin-1.1.10.vsix",
-    "vscode:clean": "del chatgpt-vscode-plugin-1.1.10.vsix",
+    "vscode:install": "code --install-extension chatgpt-sql-vscode-plugin-1.1.10.vsix",
+    "vscode:clean": "del chatgpt-sql-vscode-plugin-1.1.10.vsix",
     "setup": "npm install",
     "compile": "webpack",
     "watch": "webpack --watch",
@@ -109,6 +282,8 @@
   "devDependencies": {
     "@types/glob": "^8.0.0",
     "@types/mocha": "^10.0.1",
+    "@types/mssql": "^8.1.2",
+    "@types/mysql": "^2.15.21",
     "@types/node": "18.x",
     "@types/vscode": "^1.74.0",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
@@ -125,6 +300,7 @@
     "webpack-cli": "^5.0.0"
   },
   "dependencies": {
+    "mysql": "^2.18.1",
     "openai": "^3.1.0"
   }
 }

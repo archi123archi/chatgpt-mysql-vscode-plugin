@@ -1,5 +1,18 @@
+/**
+ * @author Ali Gençay
+ * https://github.com/gencay/vscode-chatgpt
+ *
+ * @license
+ * Copyright (c) 2022 - Present, Ali Gençay
+ *
+ * All rights reserved. Code licensed under the MIT license
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ */
+
 :root {
-    --container-padding: 20px;
+    --container-padding: 0;
     --input-padding-vertical: 6px;
     --input-padding-horizontal: 4px;
     --input-margin-vertical: 4px;
@@ -39,9 +52,12 @@ a:active {
     color: var(--vscode-textLink-activeForeground);
 }
 
+pre {
+    margin-top: 1rem !important;
+}
+
 code {
-    font-size: var(--vscode-editor-font-size);
-    font-family: var(--vscode-editor-font-family);
+    font-family: var(--vscode-editor-font-family) !important;
 }
 
 button {
@@ -50,13 +66,16 @@ button {
     text-align: center;
     outline: 1px solid transparent;
     outline-offset: 2px !important;
-    color: var(--vscode-button-foreground);
-    background: var(--vscode-button-background);
+    color: var(--vscode-button-secondaryForeground) !important;
+    background: var(--vscode-button-secondaryBackground) !important;
 }
 
 button:hover {
-    cursor: pointer;
-    background: var(--vscode-button-hoverBackground);
+    background: var(--vscode-button-secondaryHoverBackground) !important;
+}
+
+button:hover svg {
+    stroke: var(--vscode-button-secondaryForeground) !important;
 }
 
 button:focus {
@@ -89,52 +108,95 @@ textarea::placeholder {
     color: var(--vscode-input-placeholderForeground);
 }
 
-.loader {
-    width: 70px;
-    height: 35px;
-    overflow: hidden;
-    position: absolute;
-    margin: auto;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+[contenteditable='true'] {
+    outline: 1px solid var(--vscode-focusBorder);
 }
 
-.loader:before {
-    content: "";
-    width: 70px;
-    height: 70px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    border: 5px solid #0000;
-    border-color: #fff #fff #0000 #0000;
-    border-radius: 50%;
-    box-sizing: border-box;
-    animation: rotate 3s ease-in-out infinite;
-    transform: rotate(-200deg);
+/* CSS Spinner */
+.spinner {
+    width: 36px;
+    text-align: center;
 }
 
-@keyframes rotate {
-    0% {
-        border-width: 10px;
-    }
+.spinner>div {
+    width: 4px;
+    height: 4px;
+    background-color: #888;
 
-    25% {
-        border-width: 3px;
-    }
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
 
-    50% {
-        transform: rotate(115deg);
-        border-width: 10px;
-    }
+.spinner .bounce1 {
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+}
 
-    75% {
-        border-width: 3px;
-    }
+.spinner .bounce2 {
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+}
 
+@-webkit-keyframes sk-bouncedelay {
+
+    0%,
+    80%,
     100% {
-        border-width: 10px;
+        -webkit-transform: scale(0)
     }
+
+    40% {
+        -webkit-transform: scale(1.0)
+    }
+}
+
+@keyframes sk-bouncedelay {
+
+    0%,
+    80%,
+    100% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+    }
+
+    40% {
+        -webkit-transform: scale(1.0);
+        transform: scale(1.0);
+    }
+}
+
+.textarea-wrapper {
+    display: grid;
+    max-height: 20rem;
+}
+
+.textarea-wrapper::after {
+    content: attr(data-replicated-value) " ";
+    white-space: pre-wrap;
+    visibility: hidden;
+}
+
+.textarea-wrapper>textarea {
+    resize: none;
+    overflow: hidden auto;
+    max-height: 20rem;
+}
+
+.textarea-wrapper>textarea,
+.textarea-wrapper::after {
+    border: 1px solid black;
+    padding: .5rem 5rem .5rem .5rem;
+    font: inherit;
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.pre-code-element .code-actions-wrapper {
+    opacity: 0.70;
+}
+
+.pre-code-element:hover .code-actions-wrapper {
+    opacity: 1;
+    display: flex;
 }
