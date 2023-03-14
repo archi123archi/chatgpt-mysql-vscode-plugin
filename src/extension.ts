@@ -8,7 +8,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('chatgpt-sql-vscode-plugin.chatgptsql.explainPls', askGPTToExplain),
 		
 		vscode.commands.registerCommand('chatgpt-sql-vscode-plugin.askGPT', askChatGPT),
-		vscode.commands.registerCommand('chatgpt-sql-vscode-plugin.summarize', askGPTSummarize),
+		// vscode.commands.registerCommand('chatgpt-sql-vscode-plugin.summarize', askGPTSummarize),
 		vscode.commands.registerCommand('chatgpt-sql-vscode-plugin.explainPls', askGPTToExplain),
 		vscode.commands.registerCommand('chatgpt-sql-vscode-plugin.optimize', askGPTToOptimize),
 		vscode.commands.registerCommand('chatgpt-sql-vscode-plugin.findProblems', askGPTToFindProblems),

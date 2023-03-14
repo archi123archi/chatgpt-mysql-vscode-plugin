@@ -1,7 +1,7 @@
 import { Configuration, OpenAIApi } from 'openai';
 import * as vscode from 'vscode';
-import * as mysql from 'mysql';
-import * as util from 'util';
+import * as mysql from 'mysql2/promise';
+import { PoolConnection, Connection, createPool, FieldPacket, Pool } from 'mysql2/promise';
 
 const chatgptSqlConfig = vscode.workspace.getConfiguration("chatgpt-sql");
 const ghost = chatgptSqlConfig.get("mysql.host") as string;
@@ -13,7 +13,6 @@ const gdbTable = 'chatgpt_table';
 const gdbTablePrompt = 'prompt';
 const gdbTableAnswer = 'answer';
 
-// declare var gdbReady: number;
 let gdbReady: number = 0;
 
 const poolInit = mysql.createPool({
@@ -31,20 +30,23 @@ const pool = mysql.createPool({
     database: gdbName,
 });
 
-const query = util.promisify(poolInit.query).bind(poolInit);
+let myOutputChannel = vscode.window.createOutputChannel('Debug Channel');
+myOutputChannel.show(true);
 
 export async function checkDatabaseAndTable() {
+    const conn = await poolInit.getConnection();
     const createDbQuery = `CREATE DATABASE IF NOT EXISTS ${gdbName};`;
 
     try {
-        const result = await query(createDbQuery);
+        const result = await conn.query(createDbQuery);
     } catch (err) {
+        myOutputChannel.appendLine("create database fail");
         throw err;
     }
 
     const useDbQuery = `USE ${gdbName};`;
     try {
-        const result = await query(useDbQuery);
+        const result = await conn.query(useDbQuery);
     } catch (err) {
         throw err;
     }
@@ -56,10 +58,11 @@ export async function checkDatabaseAndTable() {
         ${gdbTableAnswer} TEXT
       );`;
     try {
-        const result = await query(createTableQuery);
+        const result = await conn.query(createTableQuery);
     } catch (err) {
         throw err;
     }
+    conn.release();
 }
 
 (async () => {
@@ -82,40 +85,55 @@ export async function insertText(inputText: String, outputText: String) {
         return;
     if (!gdbReady)
         return;
-    pool.getConnection((err, connection) => {
-        if (err) throw err;
-        const sql = `INSERT INTO ${gdbTable} (${gdbTablePrompt}, ${gdbTableAnswer}) VALUES ('${inputText}', '${outputText}')`;
-        connection.query(sql, (err, result) => {
-            connection.release();
-            if (err) throw err;
-            console.log(`Inserted ${result.affectedRows} row(s)`);
-        });
-    });
+    let conn: PoolConnection | undefined;
+    try {
+        conn = await pool.getConnection();
+      
+        const sql = `INSERT INTO ${gdbTable} (${gdbTablePrompt}, ${gdbTableAnswer}) VALUES (?, ?)`;
+        const [results, fields]: [unknown, FieldPacket[]] = await conn.query(sql, [inputText, outputText]);
+      
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (conn) {
+          conn.release();
+        }
+      }
 }
 
-export async function queryText(inputText: String): Promise<String> {
-    return new Promise((resolve, reject) => {
-        const config = vscode.workspace.getConfiguration("chatgpt-sql");
-        const readEnable = config.get("mysql.readEnable") as boolean;
-        if (!readEnable)
-            resolve('');
-        if (!gdbReady)
-            resolve('');
-        pool.getConnection((err, connection) => {
-            if (err) reject(err);
-            const sql = `SELECT ${gdbTableAnswer} FROM ${gdbTable} WHERE ${gdbTablePrompt}='${inputText}'`;
-            connection.query(sql, (err, result) => {
-                connection.release();
-                if (err) reject(err);
-                if (result.length === 0) {
-                    resolve('');
-                } else {
-                    resolve(result[0].answer);
-                }
-            });
-        });
-    });
-}
+export async function queryText(inputText: string): Promise<string> {
+    const config = vscode.workspace.getConfiguration('chatgpt-sql');
+    const readEnable = config.get('mysql.readEnable') as boolean;
+    if (!readEnable) {
+      return '';
+    }
+    if (!gdbReady) {
+      return '';
+    }
+  
+    let conn: PoolConnection | undefined;
+  
+    try {
+      conn = await pool.getConnection();
+  
+      const sql = `SELECT ${gdbTableAnswer} FROM ${gdbTable} WHERE ${gdbTablePrompt}='${inputText}'`;
+  
+    //   const [rows] = await conn.query(sql);
+      const [rows] = await conn.query(sql) as Array<any>;
+  
+      if (rows.length === 0) {
+        return '';
+      } else {
+        return (rows[0] as any).answer;
+      }
+    } catch (error) {
+      throw error;
+    } finally {
+      if (conn) {
+        conn.release();
+      }
+    }
+  }
 
 
 export default class ChatGptViewProvider implements vscode.WebviewViewProvider {

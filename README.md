@@ -1,6 +1,23 @@
 # ChatGPT VSCode Extension
 
-This is a Visual Studio Code extension for ChatGPT with MySQL cache.
+This is a Visual Studio Code extension for ChatGPT with MySQL cache. If hit in mysql database, it will return the result from the database, otherwise return the result from ChatGPT.
+
+## Usage
+
+To use the extension:
+**This extension uses the official OpenAI library**
+
+After you install the ChatGPTMySQL plug in, you should reload the window. ctrl + p, then input reload
+
+Open the settings[Ctrl + ,] and search for "chatgptsql", configure the corresponding options according to the prompts. 
+
+You should config the API key get from OpenAI: https://openai.com/account/api-keys, 
+
+If you want to cache ChatGPT records(input/output) in MySQL, you need to configure the relevant options for the MySQL database: host, user, and password.
+
+Then you can use it, just select some code then right click, then select the "ChatGPTMySQL" menu, then select the sub command.
+
+*Once you're authenticated, you can ask ChatGPT any question and supply source code from your current file/selection.*
 
 ## Install the plugin from this [Github repository](https://github.com/gaojian80422/chatgpt-mysql-vscode-plugin)
 #### Commands:
@@ -24,22 +41,6 @@ This is a Visual Studio Code extension for ChatGPT with MySQL cache.
 
 *Everything are available from the context menu when right-clicking in the editor.*
 
-## Usage
-
-To use the extension:
-**This extension uses the official OpenAI library**
-Open the settings[Ctrl + ,] and search for "chatgptmysql", configure the corresponding options according to the prompts. 
-You should config the API key get from OpenAI: https://openai.com/account/api-keys, 
-If you want to cache ChatGPT records(input/output) in MySQL, you need to configure the relevant options for the MySQL database: host, user, and password,
-and run the command as below:
-mysql -u username -p
-input you password
-mysql> ALTER USER 'username'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-mysql> FLUSH PRIVILEGES;
-
-Ensure your username use the mysql_native_password method.
-
-*Once you're authenticated, you can ask ChatGPT any question and supply source code from your current file/selection.*
 
 ## Support
 If you need help using this extension, please open an issue on the GitHub repository for this extension.
