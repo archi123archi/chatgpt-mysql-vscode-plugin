@@ -28,7 +28,16 @@ This is a Visual Studio Code extension for ChatGPT with MySQL cache.
 
 To use the extension:
 **This extension uses the official OpenAI library**
-Open the settings[Ctrl + ,] and search for "chatgptmysql", configure the corresponding options according to the prompts. You should config the API key get from OpenAI: https://openai.com/account/api-keys, If you want to cache ChatGPT records(input/output) in MySQL, you need to configure the relevant options for the MySQL database: host, user, and password.
+Open the settings[Ctrl + ,] and search for "chatgptmysql", configure the corresponding options according to the prompts. 
+You should config the API key get from OpenAI: https://openai.com/account/api-keys, 
+If you want to cache ChatGPT records(input/output) in MySQL, you need to configure the relevant options for the MySQL database: host, user, and password,
+and run the command as below:
+mysql -u username -p
+input you password
+mysql> ALTER USER 'username'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+mysql> FLUSH PRIVILEGES;
+
+Ensure your username use the mysql_native_password method.
 
 *Once you're authenticated, you can ask ChatGPT any question and supply source code from your current file/selection.*
 

@@ -8,7 +8,7 @@
   "publisher": "gaojian80422",
   "displayName": "ChatGPT With MySQL Cache",
   "description": "A ChatGPT with MySQL cache integration build using ChatGPT",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -282,7 +282,6 @@
   "devDependencies": {
     "@types/glob": "^8.0.0",
     "@types/mocha": "^10.0.1",
-    "@types/mssql": "^8.1.2",
     "@types/mysql": "^2.15.21",
     "@types/node": "18.x",
     "@types/vscode": "^1.74.0",
