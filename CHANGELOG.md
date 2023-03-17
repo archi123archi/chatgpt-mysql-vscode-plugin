@@ -4,6 +4,11 @@ All notable changes to the "chatgpt-vscode-plugin" extension will be documented 
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [3.1.1]
+
+- Add prompt hash to speed up.
+- Fix the bug that summarize not responding. 
+
 ## [3.1.0]
 
 - Change mysql to mysql2 for connect fail.

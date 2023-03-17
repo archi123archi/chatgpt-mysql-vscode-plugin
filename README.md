@@ -1,4 +1,4 @@
-# ChatGPT VSCode Extension
+# ChatGPT With MySQL Cache VSCode Extension
 
 This is a Visual Studio Code extension for ChatGPT with MySQL cache. If hit in mysql database, it will return the result from the database, otherwise return the result from ChatGPT.
 

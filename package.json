@@ -8,7 +8,7 @@
   "publisher": "gaojian80422",
   "displayName": "ChatGPT With MySQL Cache",
   "description": "A ChatGPT with MySQL cache integration build using ChatGPT",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -280,6 +280,7 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.1.1",
     "@types/glob": "^8.0.0",
     "@types/mocha": "^10.0.1",
     "@types/mysql": "^2.15.21",
@@ -299,6 +300,7 @@
     "webpack-cli": "^5.0.0"
   },
   "dependencies": {
+    "crypto-js": "^4.1.1",
     "mysql2": "^3.2.0",
     "openai": "^3.1.0"
   }

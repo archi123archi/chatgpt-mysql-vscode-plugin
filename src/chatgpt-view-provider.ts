@@ -2,6 +2,7 @@ import { Configuration, OpenAIApi } from 'openai';
 import * as vscode from 'vscode';
 import * as mysql from 'mysql2/promise';
 import { PoolConnection, Connection, createPool, FieldPacket, Pool } from 'mysql2/promise';
+import * as CryptoJS from 'crypto-js';
 
 const chatgptSqlConfig = vscode.workspace.getConfiguration("chatgpt-sql");
 const ghost = chatgptSqlConfig.get("mysql.host") as string;
@@ -9,7 +10,8 @@ const gport = chatgptSqlConfig.get("mysql.port") as number;
 const guser = chatgptSqlConfig.get("mysql.user") as string;
 const gpassword = chatgptSqlConfig.get("mysql.password") as string;
 const gdbName = chatgptSqlConfig.get("mysql.database") as string;
-const gdbTable = 'chatgpt_table';
+const gdbTable = 'chatgpt_table_with_hash';
+const gdbTablePromptHash = 'prompt_hash';
 const gdbTablePrompt = 'prompt';
 const gdbTableAnswer = 'answer';
 
@@ -48,18 +50,21 @@ export async function checkDatabaseAndTable() {
     try {
         const result = await conn.query(useDbQuery);
     } catch (err) {
+        myOutputChannel.appendLine("use database fail");
         throw err;
     }
 
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS ${gdbTable} (
         id INT AUTO_INCREMENT PRIMARY KEY,
+        ${gdbTablePromptHash} TEXT,
         ${gdbTablePrompt} TEXT,
         ${gdbTableAnswer} TEXT
       );`;
     try {
         const result = await conn.query(createTableQuery);
     } catch (err) {
+        myOutputChannel.appendLine("create table fail");
         throw err;
     }
     conn.release();
@@ -88,52 +93,53 @@ export async function insertText(inputText: String, outputText: String) {
     let conn: PoolConnection | undefined;
     try {
         conn = await pool.getConnection();
-      
-        const sql = `INSERT INTO ${gdbTable} (${gdbTablePrompt}, ${gdbTableAnswer}) VALUES (?, ?)`;
-        const [results, fields]: [unknown, FieldPacket[]] = await conn.query(sql, [inputText, outputText]);
-      
-      } catch (err) {
+        const sha256Hash = CryptoJS.SHA256(inputText as string).toString();
+        const sql = `INSERT INTO ${gdbTable} (${gdbTablePromptHash}, ${gdbTablePrompt}, ${gdbTableAnswer}) VALUES (?, ?, ?)`;
+        const [results, fields]: [unknown, FieldPacket[]] = await conn.query(sql, [sha256Hash, inputText, outputText]);
+
+    } catch (err) {
+        myOutputChannel.appendLine("insert fail");
         console.error(err);
-      } finally {
+    } finally {
         if (conn) {
-          conn.release();
+            conn.release();
         }
-      }
+    }
 }
 
 export async function queryText(inputText: string): Promise<string> {
     const config = vscode.workspace.getConfiguration('chatgpt-sql');
     const readEnable = config.get('mysql.readEnable') as boolean;
     if (!readEnable) {
-      return '';
+        return '';
     }
     if (!gdbReady) {
-      return '';
-    }
-  
-    let conn: PoolConnection | undefined;
-  
-    try {
-      conn = await pool.getConnection();
-  
-      const sql = `SELECT ${gdbTableAnswer} FROM ${gdbTable} WHERE ${gdbTablePrompt}='${inputText}'`;
-  
-    //   const [rows] = await conn.query(sql);
-      const [rows] = await conn.query(sql) as Array<any>;
-  
-      if (rows.length === 0) {
         return '';
-      } else {
-        return (rows[0] as any).answer;
-      }
-    } catch (error) {
-      throw error;
-    } finally {
-      if (conn) {
-        conn.release();
-      }
     }
-  }
+
+    let conn: PoolConnection | undefined;
+
+    try {
+        conn = await pool.getConnection();
+        const sha256Hash = CryptoJS.SHA256(inputText as string).toString();
+        const sql = `SELECT ${gdbTableAnswer} FROM ${gdbTable} WHERE ${gdbTablePromptHash}='${sha256Hash}'`;
+
+        const [rows] = await conn.query(sql) as Array<any>;
+
+        if (rows.length === 0) {
+            return '';
+        } else {
+            return (rows[0] as any).answer;
+        }
+    } catch (error) {
+        myOutputChannel.appendLine("query fail");
+        throw error;
+    } finally {
+        if (conn) {
+            conn.release();
+        }
+    }
+}
 
 
 export default class ChatGptViewProvider implements vscode.WebviewViewProvider {
