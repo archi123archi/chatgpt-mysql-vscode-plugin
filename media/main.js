@@ -99,19 +99,19 @@
                     // Create copy to clipboard button
                     const copyButton = document.createElement("button");
                     copyButton.title = "Copy to clipboard";
-                    copyButton.innerHTML = clipboardSvg;
+                    copyButton.innerHTML = `${clipboardSvg} Copy`;
 
                     copyButton.classList.add("code-element-gnc", "p-2", "flex", "items-center", "rounded-lg");
 
                     const insert = document.createElement("button");
                     insert.title = "Insert the below code to the current file";
-                    insert.innerHTML = insertSvg;
+                    insert.innerHTML = `${insertSvg} Insert`;
 
                     insert.classList.add("edit-element-gnc", "p-2", "flex", "items-center", "rounded-lg");
 
                     const newTab = document.createElement("button");
                     newTab.title = "Create a new file with the below code";
-                    newTab.innerHTML = plusSvg;
+                    newTab.innerHTML = `${plusSvg} New`;
 
                     newTab.classList.add("new-code-element-gnc", "p-2", "flex", "items-center", "rounded-lg");
 

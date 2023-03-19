@@ -264,12 +264,13 @@ export default class ChatGptViewProvider implements vscode.WebviewViewProvider {
                 const temperature = chatGptExtensionConfig.get("gpt3.temperature") as number;
                 const top_p = chatGptExtensionConfig.get("gpt3.top_p") as number;
 
+                const systemStr = chatGptExtensionConfig.get("system") as string;
                 completion = await this.openAiApi.createChatCompletion({
                     model: modelName,
                     max_tokens: maxtokens,
                     temperature: temperature,
                     top_p: top_p,
-                    messages: [{ 'role': 'user', 'content': question }],
+                    messages: [{ 'role': 'system', 'content': systemStr }, { 'role': 'user', 'content': question }],
                 });
             } catch (error: any) {
                 await vscode.window.showErrorMessage("Error sending request to ChatGPT", error);

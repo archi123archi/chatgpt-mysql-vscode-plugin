@@ -3,12 +3,12 @@
   "icon": "images/icon.png",
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/barnesoir/chatgpt-sql-vscode-plugin"
+    "url": "https://github.com/gaojian80422/chatgpt-sql-vscode-plugin"
   },
   "publisher": "gaojian80422",
   "displayName": "ChatGPT With MySQL Cache",
   "description": "A ChatGPT with MySQL cache integration build using ChatGPT",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -215,6 +215,11 @@
           "type": "number",
           "default": 1,
           "description": "An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered. We generally recommend altering this or temperature but not both."
+        },
+        "chatgpt-sql.system": {
+          "type": "string",
+          "default": "You are ChatGPT helping the User with coding. You are intelligent, helpful and an expert developer, who always gives the correct answer and only does what instructed. You always answer truthfully and don't make things up. (When responding to the following prompt, please make sure to properly style your response using Github Flavored Markdown. Use markdown syntax for things like headings, lists, colored text, code blocks, highlights etc. Make sure not to mention markdown or styling in your actual response.",
+          "description": "The system message used in OpenAI API"
         },
         "chatgpt-sql.promptPrefix.summarize": {
           "type": "string",

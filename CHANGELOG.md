@@ -4,6 +4,10 @@ All notable changes to the "chatgpt-vscode-plugin" extension will be documented 
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [3.1.2: 2023/03/19]
+
+- Add system message of OpenAI API support.
+
 ## [3.1.1: 2023/03/17]
 
 - Add prompt hash to speed up.
