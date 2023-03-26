@@ -4,7 +4,7 @@
   "displayName": "ChatGPT With MySQL Cache",
   "icon": "images/icon.png",
   "description": "A ChatGPT with MySQL cache integration build using ChatGPT",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "aiKey": "",
   "repository": {
     "url": "https://github.com/gaojian80422/chatgpt-sql-vscode-plugin"
