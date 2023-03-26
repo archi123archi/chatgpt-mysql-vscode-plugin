@@ -4,6 +4,10 @@ All notable changes to the "chatgpt-vscode-plugin" extension will be documented 
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [3.2.1] - 2023-03-26
+
+- Fix README.
+
 ## [3.2.0] - 2023-03-26
 
 - Base on gency's https://github.com/gencay/vscode-chatgpt.
