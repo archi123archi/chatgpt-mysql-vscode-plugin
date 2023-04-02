@@ -4,6 +4,10 @@ All notable changes to the "chatgpt-vscode-plugin" extension will be documented 
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [3.2.2] - 2023-04-02
+
+- Recover system context used in OpenAI api.
+- 
 ## [3.2.1] - 2023-03-26
 
 - Fix README.
